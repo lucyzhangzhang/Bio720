@@ -1,0 +1,5 @@
+ls -l .nanorc
+-rw-r--r-- 1 lucy 11 Sep 18 15:52 .nanorc
+
+more .nanorc
+set regexp

@@ -1,0 +1,4 @@
+df -h ~ 
+Filesystem            Size  Used Avail Use% Mounted on
+infofile1:/share/home
+                       46T   35T   12T  76% /home

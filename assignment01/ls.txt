@@ -1,0 +1,2 @@
+720example.fasta
+720example fasta.doc

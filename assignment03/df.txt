@@ -1,0 +1,15 @@
+df -h
+Filesystem            Size  Used Avail Use% Mounted on
+/dev/vda1              20G  9.8G  8.9G  53% /
+tmpfs                 4.0G   24K  4.0G   1% /dev/shm
+infofile1:/2           46T   35T   12T  76% /1
+infofile1:/share/home
+                       46T   35T   12T  76% /home
+infofile1:/share/local-centos65
+                       46T   35T   12T  76% /usr/local
+infofile2:/share/scratch
+                       46T   24T   22T  53% /scratch
+infofile4-inside:/volume1/infofile3
+                       39T   34T  5.0T  87% /3
+infofile4-inside:/volume1/scratch
+                       39T   34T  5.0T  87% /4

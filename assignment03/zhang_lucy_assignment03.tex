@@ -1,0 +1,87 @@
+\documentclass[12pt]{article}
+\usepackage{graphicx}  % insert pictures
+\usepackage{enumitem}  % number listings
+\usepackage{fancyvrb}  % insert plaintext files
+\usepackage{geometry}  % change page geometry styling
+\usepackage{tabulary}  % for tables
+\usepackage{longtable} % multi-page tables
+\usepackage{listings}  % linebreak in verbatim code
+
+\renewcommand{\texttt}[1]{% supposedly, makes texttt wrap around without using the hyphenating trick
+  \begingroup
+  \ttfamily
+  \begingroup\lccode`~=`/\lowercase{\endgroup\def~}{/\discretionary{}{}{}}%
+  \begingroup\lccode`~=`[\lowercase{\endgroup\def~}{[\discretionary{}{}{}}%
+  \begingroup\lccode`~=`.\lowercase{\endgroup\def~}{.\discretionary{}{}{}}%
+  \catcode`/=\active\catcode`[=\active\catcode`.=\active
+  \scantokens{#1\noexpand}%
+  \endgroup
+}
+
+\setenumerate{itemsep=3pt, topsep=3pt, leftmargin=-0.5in} % change page geometry styling
+\setlength{\topskip}{0pt}    
+\newcommand{\tb}{\textbackslash}
+
+\lstset{ % settings for verbatim code, note breaklines=true
+basicstyle=\small\ttfamily,
+columns=flexible,
+breaklines=true
+}
+
+%\raggedright 
+% no space on the top of the text
+\begin{document}
+
+\begin{centering}
+    \textbf{Bio 720 - Assignment 03}\par
+    Lucy Zhang\par
+    \today\par
+\end{centering}                                           % haven't fixed \maketitle spacing
+
+\begin{enumerate}
+    \item \includegraphics[width=6.5in]{../assignment02/Screenshot_20180911_114301.png}
+    \item \texttt{rmdir} doesn't remove non-empty directories as a safety feature. \texttt{rm dirFile/*} does not remove any hidden files i.e. files starting with a period, and \texttt{ls} does not display hidden files by default. There are hidden files in \texttt{dirFile} hence \texttt{rmdir} cannot remove the directory even after running \texttt{rm dirFile/*}
+    \item \begin{enumerate}[label=(\alph*), leftmargin=0.5in]
+            \item \texttt{find ./ -type f -ctime -30}
+            \item \texttt{find ./ -type f -cmin -43200}
+    \end{enumerate}
+    \item \texttt{sort -k 1,1 -k 2n file}
+    \item Remove numbers and spaces\par
+        \texttt{sed 's/[ 0-9]*//g' \~ {}brian/Bacillus\_genomes/Bacillus\_anthracis\_Ames\_NC\_003997.gbk > output}\par
+        Or\par
+        \texttt{tr -d ' ' < \~ {}brian/Bacillus\_genomes/Bacillus\_anthracis\_Ames\_NC\_003997.gbk | tr -d 0-9 > output}\par
+        \texttt{grep -c tatta output}\par
+        \texttt{12904}\par
+        \texttt{grep -c} returns the number of lines that matches can be found, this number is underestimated because the \texttt{-c} flag doesn't differentiate between lines where there are multiple matches, thus counting multiple matches on one line as one hit.\par
+        \texttt{grep -o tatta output}\par
+        \texttt{grep -o} returns the parts of the lines that have hits on them.\par
+        \texttt{grep -oc tatta output}\par
+        \texttt{12904}\par
+        \texttt{grep -oc} returns the same number as \texttt{grep -c}, the \texttt{-c} option suppresses the output of \texttt{grep -o}.\par
+        \texttt{grep -o output | wc -l} can be used to count the output of \texttt{grep -o}.\par
+        \texttt{14054}
+    \item \begin{enumerate}[label=(\alph*), leftmargin=0.5in]
+            \item \texttt{grep -o 't[at][ta][ac][ac]t' output | wc -l}\par
+        \texttt{47142}\par
+    \item \texttt{grep -oE 'ttgaca.\{15,19\}tata' output | wc -l}\par
+        \texttt{25}
+    \item \texttt{grep -oE 'ttgaca.\{15,19\}tataat' output | wc -l}\par
+        \texttt{5}
+    \end{enumerate}
+    \item \texttt{head -n 1 720example.fastq | sed 's/@/>/g' > output.fasta \&\& grep -ve '[@-0-9?<>\textbackslash.;:=+,]' 720example.fastq >> output.fasta}
+    \item \begin{enumerate}[label=(\alph*), leftmargin=0.5in]
+            \item \texttt{sleep} puts the thread to sleep for the specified amount of time, typing \texttt{Ctrl+z} suspends the program, which stops the sleep. \texttt{bg} restarts the suspended job but runs it in the background. \texttt{jobs} shows the jobs owned by the user and \texttt{ps} shows the status of the jobs.\par
+            \item \texttt{\&} at the end of a command starts the job in the background. Every job has a process ID assigned to it, \texttt{kill PID} will terminate the job with the specified process ID.
+            \item \texttt{sleep} didn't terminate when I logged off and re-logged into INFO, same with \texttt{nohup sleep}. They both show as interruptible sleep state in \texttt{ps} and don't show up in \texttt{jobs}.
+\end{enumerate}
+    \item \begin{enumerate}[label=(\alph*), leftmargin=0.5in]
+            \item \texttt{7} filesystems\par
+            \item \texttt{infofile1}
+                \VerbatimInput{dfhome.txt}
+            \item \texttt{df \~ {}/*/*/*/* | grep -ve 'home'} $\rightarrow$ no hits\par
+                No
+    \end{enumerate}
+    \item \texttt{sort input | tr ',' '\textbackslash t' > output}
+\end{enumerate}
+
+\end{document}

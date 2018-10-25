@@ -1,0 +1,48 @@
+\documentclass[12pt]{article}
+\usepackage{graphicx}  % insert pictures
+\usepackage{enumitem}  % number listings
+\usepackage{fancyvrb}  % insert plaintext files
+\usepackage{geometry}  % change page geometry styling
+
+\setenumerate{itemsep=3pt, topsep=3pt, leftmargin=-0.5in} % change page geometry styling
+\setlength{\topskip}{0pt}                                 % no space on the top of the text
+
+% \author{Lucy Zhang}
+% \date{\today}
+% \title{Bio 720 - Assignment 01}
+
+\begin{document}
+\begin{centering}
+    \textbf{Bio 720 - Assignment 01}\par
+    Lucy Zhang\par
+    \today\par
+\end{centering}                                           % haven't fixed \maketitle spacing
+
+\begin{enumerate}
+    \item \includegraphics[width=6.5in]{Screenshot_20180911_114301.png}
+    \item \texttt{scp lucy@info.mcmaster.ca:/home/brian/720example* \~}
+    \item \texttt{mkdir myFirstDir}\par
+        \texttt{touch file.\{a..c\}\{a..c\}\{a..c\}}
+    \item \texttt{mkdir my\{Second,Third,Fourth\}Dir}\par
+        \texttt{cp file.a* mySecondDir}\par
+        \texttt{cp file.b* myThirdDir}\par
+        \texttt{cp file.c* myFourthDir}
+    \item \texttt{cp file.*b* \~}
+    \item 
+        \begin{enumerate}[label=(\alph*),leftmargin=0.5in]
+            \item\texttt{mkdir myFifthDir \&\& touch myFifthDir/file.\{1..20\}}
+            \item\texttt{mv myFifthDir/file.\{5..15\} myFirstDir}
+        \end{enumerate}
+    \item \texttt{scp lucy@info.mcmaster.ca:/home/brian/720example.fasta 720example\_fasta.doc /home/lucy}\par
+          \texttt{more} can only display plaintext files, it crashes because it doesn't know how to read the Word document encoding. 
+    \item \texttt{mv 720example\_fasta.doc 720example\textbackslash { }fasta.doc}\par
+                output:\par
+        \VerbatimInput[xleftmargin=0.2in]{ls.txt} % xleftmargin changes the left margin
+    \item Use a monospace font like Courier New or Lucida Console
+    \item \begin{enumerate}[label=(\alph*),leftmargin=0.5in]
+            \item the \texttt{.fasta} file only contains the sequence reads while the \texttt{.fastq} file contains the sequence reads as well as the quality (Phred score) of each read.
+            \item '-' is a quality score of 12 in the new Illumina format, it corresponds to the p-error of 0.06310, which means there is a 6.3\% chance that the base call is inaccurate.
+          \end{enumerate}
+\end{enumerate}
+
+\end{document}

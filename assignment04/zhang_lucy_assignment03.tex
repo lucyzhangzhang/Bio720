@@ -1,0 +1,71 @@
+\documentclass[12pt]{article}
+\usepackage{graphicx}  % insert pictures
+\usepackage{enumitem}  % number listings
+\usepackage{fancyvrb}  % insert plaintext files
+\usepackage[margin=1in]{geometry}  % change page geometry styling
+\usepackage{tabulary}  % for tables
+\usepackage{longtable} % multi-page tables
+\usepackage{listings}  % linebreak in verbatim code
+
+\renewcommand{\texttt}[1]{% supposedly, makes texttt wrap around without using the hyphenating trick
+  \begingroup
+  \ttfamily
+  \begingroup\lccode`~=`/\lowercase{\endgroup\def~}{/\discretionary{}{}{}}%
+  \begingroup\lccode`~=`[\lowercase{\endgroup\def~}{[\discretionary{}{}{}}%
+  \begingroup\lccode`~=`.\lowercase{\endgroup\def~}{.\discretionary{}{}{}}%
+  \catcode`/=\active\catcode`[=\active\catcode`.=\active
+  \scantokens{#1\noexpand}%
+  \endgroup
+}
+
+\setenumerate{itemsep=3pt, topsep=3pt, leftmargin=-0.1in} % change page geometry styling
+\setlength{\topskip}{0pt}    
+\newcommand{\tb}{\textbackslash}
+
+\lstset{ % settings for verbatim code, note breaklines=true
+basicstyle=\small\ttfamily,
+columns=flexible,
+breaklines=true
+}
+
+%\raggedright 
+% no space on the top of the text
+\begin{document}
+
+\begin{centering}
+    \textbf{Bio 720 - Assignment 04}\par
+    Lucy Zhang\par
+    \today\par
+\end{centering}                                           % haven't fixed \maketitle spacing
+
+\begin{enumerate}
+ \item \includegraphics[width=6.5in]{Screenshot_20180911_114301.png}
+  \item The pattern matches to the subdivisions of 4 digits in the text.
+  \item ~\\
+  \begin{tabular}{rrl}
+  (a) & \texttt{`\tb bis\tb b`} & \texttt{what is it} \\
+  (b) & \texttt{`\tb Bis\tb B'} & \texttt{thistle} \\
+  (c) & \texttt{`\tb bis\tb B'} & \texttt{istanbul} \\
+  (d) & \texttt{`\tb Bis\tb b'} & \texttt{confutatis} \\
+  \end{tabular}
+  \item ~\\
+  \begin{tabular}{rrl}
+  (a) & \texttt{`e(.*)e'} & \texttt{exasperate} \\
+  (b) & \texttt{`e(.?)e'} & Nothing \\
+  \end{tabular}
+  \item \texttt{rev sequence | tr ATCG TAGC}
+  \item \VerbatimInput{extract.txt}
+  \item \VerbatimInput{adder.txt}\par
+  Usage:\par
+  \VerbatimInput{add.txt}\par
+  \item \VerbatimInput{readline.sh}
+  \item \begin{enumerate}[label=(\alph*), leftmargin=0.5in]
+  \item \texttt{wget -qO - ftp://ftp.ncbi.nlm.nih.gov/genomes/refseq/bacteria/Escherichia\_coli/latest\_assembly\_versions/GCF\_003009135.1\_ASM300913v1/GCF\_003009135.1\_ASM300913v1\_}
+  \texttt{protein.faa.gz | gunzip -c | grep "periplasmic nitrate reductase"}
+  \item \texttt{wget -qO - \$1 | gunzip -c | grep \$2}
+  \end{enumerate}
+  \item  No, the line \texttt{read number} catches the number piped from \texttt{echo} as standard input.
+
+  \end{enumerate}
+
+\end{document}

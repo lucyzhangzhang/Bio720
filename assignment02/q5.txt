@@ -1,0 +1,5 @@
+ls -l .forward
+-rw-rw-r-- 1 lucy 21 Sep 18 15:12 .forward
+
+more .forward
+zhangsj3@mcmaster.ca
