@@ -1,0 +1,85 @@
+---
+title: "Oct 22 2018 in class exercise"
+author: "Lucy Zhang"
+date: "October 22, 2018"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+______
+**Question 2. Is R a low-level or high level programming language? What is the difference?**\
+R is a high level language, high level languages are more closer to human language while low-level languages are closer to machine code
+
+______
+**Question 3. Is R a compiled or interpreted language? What is the difference?**\
+R is an interpreted language
+
+______
+**Question 4. R is often described as "slow" or "inefficient". Why? Why would a language with these attributes be so popular? In other words, what were the major goals for the R programming language.**\
+R is slow because it is an interpreted languages and has high levels of abstraction, it interpretes the code into the results instead of converting it into machine code such as that of a compiled laguage
+
+______
+**Question 5. What computer programming languages is R primarily built in? Why is it not all in R**\
+R is primarily built from C, Fortran and R. Running the script in C is much faster.
+
+______
+**Question 6. Hadley Wickham (the author of many R packages and the R super guru) points out that R is slow in part because of the R language definition (such as it is) and in part because of the most commonly used implementation `gnu-R`. In very simple terms or analogy descrive what is meant by the implementation of a computer language as compared to the definition?**\
+Definition is what the variable is holding while implementation is when 2the script uses the definition to do something
+
+______
+**Question 8: Why do `mode(x)` and `typeof(x)` give different results?**\
+`mode()` gives you the type of storage for an object that the machine sees while `typeof()` determines the internal type of storage mode that R sees. R has the same representation of a single number and a vector (i.e. both stored as numeric)
+
+______
+**Question 9: How should `y` and `z` compare? how would you check? How can you compare them to see if `R` is treating them the same?**\
+The type of `y` is a double while `z` is an integer, this can be checked with `typeof(y)` and `typeof(z)`, `:` can only operate with integers
+
+_____
+**Question 10. Note the behaviour here between `z` and some mathematical operations with `z`. Explain what is happening and why.**\
+`z` is being converted into a double when division and exponentiation occurs, because these operations only work with integers
+
+______
+**Question 11. Before checking, think about what types each of these objects should be? Then check. Which (if any) should be identical to one another? Why? How about `y` and `z`? `a` and `b`?**\
+`x` = integer, `y` = string, `z` = string, `a` = bool, `b` =  string
+
+______
+**Question 12: How would you get R to coerce `x` and `y` to be exactly the same? How about `a` and `b`?**\
+You can change the type of the data using `as`
+
+______
+**Question 13: How would I specify a vector of integers of length 10? Why are all the numbers for this (or the line of code above) 0?**\
+`integer_10 <- integer(10)`, 0s are the default.
+
+______
+**Question 14: Before running the code to find out, what will the sum of the following vector be `c(rep(T, 10), rep(F, 18), rep(T, 10), rep(F, 6))`**\
+20
+
+______
+**Qustion 15: Describe what this command has done.**\
+The command makes a list out of all the environmental variables and removes them
+
+______
+**Question 15. Create an object genotype of length 6, where the first three observations have the value "wildtype" and the last three are "mutant"**\
+`genotype = rep(c("wildtype", "mutant"), each = 3)`
+
+______
+**Question 16. If we wanted to make genotype2 into a factor (we will call it genotype2_factor) how would you do so? Is this the same as making it a factor from the very beginning?**\
+`genotype2_factor <- as.factor(genotype2)`
+
+______
+**Question 17. Let's say we had a second experimental factor which was the day of sampling (3,6) but we want to treat it as a factor `c(3, 6, 3, 6, 3, 6)` how would you code this?**\
+`day <- gl(n = 2, k = 1 , length = 6, labels = c(3, 6))`
+
+______
+**Question 18. What happens if you coerce `day` into a character?**\
+`as.character(day)`
+
+______
+**Question 19. How about if you coerce day into numeric?**\
+`as.numeric(day)`
+
+______
+**Question 20. So if you want to turn these into the numbers 3 and 6, how would you do it?**\
+`as.numeric(as.character(day))`
