@@ -1,0 +1,66 @@
+---
+title: "Lesson 2 In Class Exercise Part 2"
+author: "Lucy Zhang"
+date: "October 29, 2018"
+output: 
+  html_document: 
+    keep_md: yes
+    number_sections: yes
+    toc: yes
+---
+**1. What happens to `x` for each of these functions after you run them? Please explain what is happening in each case. i.e. Why do these behave differently?**\
+
+In the first case, x is still found in the namespace because the for-loop is executed in the global environment, in the second case, x is not found because it is contained within the function.
+
+_____
+
+**2. Write a for loop that generates a vector which is the square of all integers from 1 to 10000. Make this all happen within the loop. i.e. We are going to use the `system.time()` function to monitor how long it takes. This is pretty coarse, and a way better way of doing this is with the `microbenchmark` package (which is worth learning), but for now this function will do.**\
+
+```r
+rm(x)
+```
+
+```
+## Warning in rm(x): object 'x' not found
+```
+
+```r
+x <- c()
+system.time(for (num in 1:10000) x[num] <- num^2 )
+```
+
+```
+##    user  system elapsed 
+##   0.036   0.002   0.042
+```
+_____
+
+**3.  Now do the same thing as in question 2, but *pre-allocate* memory for the vector `x` (or whatever you want to call it) to store the 10000 values *before* running the `for` loop. You don't need to do anything differently, just initialize a vector of length 10000. Which runs faster? Please explain why?**\
+
+```r
+rm(x)
+x <- c()
+mySeq <- c(1:10000)
+system.time(for (num in mySeq) x[num] <- num^2 )
+```
+
+```
+##    user  system elapsed 
+##   0.008   0.000   0.009
+```
+The first case runs faste because R stores the values in virtual memory and is faster to retrieve than physical memory, which is the second case.
+
+_____
+
+**4. What is a very "`R`" to make this (question 2 and 3) even faster? (i.e. think about vectorization)**\
+
+```r
+rm(x)
+x <- 1:10000
+system.time(x <- x^2)
+```
+
+```
+##    user  system elapsed 
+##       0       0       0
+```
