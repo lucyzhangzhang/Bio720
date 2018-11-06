@@ -10,7 +10,7 @@ output:
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```
-Read `.csv` file.
+2. Read `.csv` file.
 ```{r}
 rna_counts <- as.data.frame(read.csv("~/Documents/R/Bio720/eXpress_dm_counts.csv", header = T, row.names=1))
 mean_exp <- function(dat, col, log = F) {
@@ -25,7 +25,7 @@ mean_exp <- function(dat, col, log = F) {
 mean_exp(rna_counts, "F105_lg_female_wings", log = T)
 mean_exp(rna_counts, "F105_lg_female_thxhorn", log = F)
 ```
-Iterative application of `mean_exp` over all columns.
+3. Iterative application of `mean_exp` over all columns.
 ```{r}
 # pre-allocate vector of 0's
 my_vec_val <- c(numeric(ncol(rna_counts))) 
@@ -41,7 +41,7 @@ for (col in 1:ncol(rna_counts)) {
 names(my_vec_val) <- my_vec_name
 head(my_vec_val)
 ```
-Using `apply()` to iterate over data frame instead of a loop.
+4. Using `apply()` to iterate over data frame instead of a loop.
 ```{r}
 head(apply(rna_counts, 2, mean))
 ```
@@ -60,12 +60,12 @@ for (col in 1:ncol(rna_counts)) {
 names(my_vec_val) <- my_vec_name
 })
 ```
-Doing it in a more R-ish way...
+5. Doing it in a more R-ish way...
 ```{r}
 head(colMeans(rna_counts))
 system.time({colMeans(rna_counts)})
 ```
-Calculating the means of the rows
+6. Calculating the means of the rows
 ```{r}
 my_row_means <- function(x) {
   my_row_mean <- rowMeans(x)
@@ -73,7 +73,7 @@ my_row_means <- function(x) {
 }
 head(my_row_means(rna_counts))
 ```
-Calculating the means of small and large male headhorns
+7. Calculating the means of small and large male headhorns
 ```{r message=FALSE}
 library(dplyr)
 my_sm <- rna_counts %>% select(contains("sm_male_hdhorn"))
@@ -85,7 +85,7 @@ Calculating the difference of means
 ```{r}
 my_diff <- my_lg_mean - my_sm_mean
 ```
-Plot the expression of each gene
+8. Plot the expression of each gene
 ```{r}
 library(ggplot2)
 library(reshape2)

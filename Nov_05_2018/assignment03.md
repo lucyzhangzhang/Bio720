@@ -8,7 +8,7 @@ output:
 ---
 
 
-Read `.csv` file.
+2. Read `.csv` file.
 
 ```r
 rna_counts <- as.data.frame(read.csv("~/Documents/R/Bio720/eXpress_dm_counts.csv", header = T, row.names=1))
@@ -35,7 +35,7 @@ mean_exp(rna_counts, "F105_lg_female_thxhorn", log = F)
 ```
 ## [1] 1433.749
 ```
-Iterative application of `mean_exp` over all columns.
+3. Iterative application of `mean_exp` over all columns.
 
 ```r
 # pre-allocate vector of 0's
@@ -59,7 +59,7 @@ head(my_vec_val)
 ##  F105_lg_female_hdhorn F105_lg_female_thxhorn   F105_lg_female_wings 
 ##               2105.712               1433.749               1869.962
 ```
-Using `apply()` to iterate over data frame instead of a loop.
+4. Using `apply()` to iterate over data frame instead of a loop.
 
 ```r
 head(apply(rna_counts, 2, mean))
@@ -79,7 +79,7 @@ system.time({apply(rna_counts, 2, mean)})
 
 ```
 ##    user  system elapsed 
-##   0.010   0.001   0.011
+##   0.010   0.002   0.013
 ```
 
 ```r
@@ -98,9 +98,9 @@ names(my_vec_val) <- my_vec_name
 
 ```
 ##    user  system elapsed 
-##    0.01    0.00    0.01
+##   0.010   0.001   0.011
 ```
-Doing it in a more R-ish way...
+5. Doing it in a more R-ish way...
 
 ```r
 head(colMeans(rna_counts))
@@ -121,7 +121,7 @@ system.time({colMeans(rna_counts)})
 ##    user  system elapsed 
 ##   0.002   0.000   0.002
 ```
-Calculating the means of the rows
+6. Calculating the means of the rows
 
 ```r
 my_row_means <- function(x) {
@@ -135,7 +135,7 @@ head(my_row_means(rna_counts))
 ## FBpp0087248 FBpp0293785 FBpp0080383 FBpp0077879 FBpp0311746 FBpp0289081 
 ##    23.45455  3446.90909    79.54545   139.21818   145.09091  1485.90909
 ```
-Calculating the means of small and large male headhorns
+7. Calculating the means of small and large male headhorns
 
 ```r
 library(dplyr)
@@ -149,7 +149,7 @@ Calculating the difference of means
 ```r
 my_diff <- my_lg_mean - my_sm_mean
 ```
-Plot the expression of each gene
+8. Plot the expression of each gene
 
 ```r
 library(ggplot2)
@@ -174,16 +174,8 @@ Plot log(2) transformed data
 my_sm_mean2 <- rowMeans(log2(my_sm))
 my_lg_mean2 <- rowMeans(log2(my_lg))
 my_diff2 <- my_lg_mean2 - my_sm_mean2
-my_diff2 <- na.omit(my_diff2)
 my_dat2 <- as.data.frame(cbind(my_sm_mean2, my_lg_mean2, my_diff2), id = c("Small", "Large", "Difference"), na.rm = T)
-```
-
-```
-## Warning in cbind(my_sm_mean2, my_lg_mean2, my_diff2): number of rows of
-## result is not a multiple of vector length (arg 3)
-```
-
-```r
+my_dat2 <- na.omit(my_dat2)
 my_dat_melt2 <- melt(my_dat2, id.vars = "my_diff2")
 my_plot2 <- ggplot(data=my_dat_melt2, aes(x = my_dat_melt2$value, y = my_diff2)) + 
   geom_point(alpha = 0.4, aes(color = my_dat_melt2$variable)) +

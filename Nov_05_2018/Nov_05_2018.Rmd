@@ -108,4 +108,75 @@ dll_data_new_subset <- dll_data[matched_set,]
 dim(dll_data_new_subset)
 ```
 ```{r}
-rm(dll_data_Dll, dll_data_wt, dll_data_new_subset, matched_set)```
+rm(dll_data_Dll, dll_data_wt, dll_data_new_subset, matched_set)
+levels(dll_data$line)
+```
+Factors are stored as integers in R to make it more efficient, have to convert the factor into `chr` for string manipulation
+```{r}
+line_str <- as.character(dll_data$line)
+str(line_str)
+head(line_str)
+
+line_names <- substr(line_str, 
+                     start = 6, stop= 1000000L )
+
+head(line_names)
+tail(line_names)
+```
+`gsub()` replaces elements in the objects specified
+```{r}
+str(line_str)
+line_names3 <- gsub(pattern = "line-",
+                    replacement = "",
+                    x = line_str)
+```
+Makes things to lower case, `toupper()` makes things into upper case
+```{r}
+line_names3 <- tolower(line_names3)
+head(line_names3)
+tail(line_names3, n = 25)
+```
+Only changes the first one 
+```{r}
+line_names3 <- sub("sam", "SAMARKAND", line_names3)
+rm(line_names2, line_names3, line_names, line_names2_mat, line_str, new_rows)
+```
+Extracting temperatures 
+```{r}
+str(dll_data$temp)
+```
+Generate a factor of temperature, changes the original data, making a new data set with `temp` as a factor
+```{r}
+temp_as_factor <- with(dll_data,
+                      factor(temp, 
+                             labels = c("LowTemp", "HighTemp")))
+str(temp_as_factor)
+```
+Using `ifelse()` to generate a factor
+```{r}
+temp_as_factor2 <- with(dll_data, ifelse(temp == 25, "LowTemp", 
+                                         ifelse(temp == 30, "HighTemp", NA)))
+temp_as_factor2 <- factor(temp_as_factor2)
+str(temp_as_factor2)
+```
+`sort` only sorts a single variable and is not designed to handle data frames. `order` should be used, highest to lowest
+```{r}
+head(order(dll_data$SCT))
+tail(order(dll_data$SCT))
+dll_data_sorted <- dll_data[order(dll_data$SCT),]
+head(dll_data_sorted)
+```
+Change from lowest to highest -> reverse
+```{r}
+dll_data_sorted <- dll_data[order(-dll_data$SCT),]
+head(dll_data_sorted)
+dll_data_sorted <- dll_data[order(dll_data$SCT, decreasing = T),]
+dll_data_sorted <- dll_data[order(dll_data$tibia),]
+head(dll_data_sorted)
+```
+Secondary, tertiary sort
+```{r}
+dll_data_sorted <- dll_data[order(dll_data$SCT, dll_data$temp),]
+head(dll_data_sorted)
+```
+`merge` will compare two things scruitinously
