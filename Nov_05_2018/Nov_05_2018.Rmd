@@ -1,0 +1,111 @@
+---
+title: "In Class, Nov 5, 2018"
+author: "Lucy Zhang"
+date: "November 5, 2018"
+output: 
+  html_document:
+    keep_md: yes
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+Download dataset
+```{r}
+dll_data = read.csv("http://datadryad.org/bitstream/handle/10255/dryad.8377/dll.csv", header=T)
+```
+View your data
+```{r}
+summary(dll_data)
+str(dll_data)
+dim(dll_data)
+head(dll_data)
+```
+Checking the data 
+```{r}
+head(is.na(dll_data))
+sum(is.na(dll_data))
+anyNA(dll_data)
+```
+Cleaning the data 
+```{r}
+dll_data_complete <- na.omit(dll_data)
+dim(dll_data)
+dim(dll_data_complete)
+dll_data <- na.omit(dll_data)
+mean(dll_data$femur)
+```
+Check for duplicated data using `duplicated()`
+```{r}
+head(duplicated(dll_data))
+tail(duplicated(dll_data))
+sum(duplicated(dll_data))
+any(duplicated(dll_data))
+dll_data[anyDuplicated(dll_data),]
+```
+Sampling rows and randomly picking them
+```{r}
+new_rows <- dll_data[sample(nrow(dll_data), size = 5, replace = T ),]
+dll_data2 <- rbind(dll_data, new_rows)
+str(dll_data2)
+```
+Then checking it again
+```{r}
+any(duplicated(dll_data2))
+```
+Find out which rows are duplicated
+```{r}
+dll_data2[duplicated(dll_data2),]
+```
+Remove data that is duplicated 
+```{r}
+dll_data_unique <- unique(dll_data2)
+dim(dll_data_unique)
+dim(dll_data2)
+dim(dll_data)
+```
+Remove environmental variables
+```{r}
+rm(dll_data_complete, dll_data_unique, dll_data2)
+```
+Subseting the data for only rows that have `wt`
+```{r}
+dll_data_wt <- dll_data[dll_data$genotype == "wt",]
+```
+Checking the subset
+```{r}
+with(dll_data, table(genotype))
+nrow(dll_data_wt)
+levels(dll_data_wt$genotype)
+```
+Even though the data has no more `Dll`, it still keeps the levels. To remove the un-needed levels
+```{r}
+dll_data_wt <- droplevels(dll_data_wt)
+levels(dll_data_wt$genotype)
+```
+Make a data frame for the Dll factor
+```{r}
+dll_data_Dll <- subset(dll_data, genotype == "Dll" )
+dim(dll_data_Dll)
+dll_data_Dll2 <- subset(dll_data, genotype == "Dll" , drop= T)
+dim(dll_data_Dll2)
+with(dll_data, table(genotype))
+levels(dll_data_Dll$genotype)
+dll_data_Dll <- droplevels(dll_data_Dll)
+```
+Make a new subset of data
+```{r}
+dll_data_Dll <- subset(dll_data, 
+                       genotype == "Dll",
+                       select = c(line, genotype, temp, SCT))
+dim(dll_data_Dll)
+```
+Find things in your data
+```{r}
+matched_set <- dll_data$line %in% c("line-Sam", "line-1")
+sum(matched_set)
+dll_data_new_subset <- dll_data[matched_set,]
+dim(dll_data_new_subset)
+```
+```{r}
+rm(dll_data_Dll, dll_data_wt, dll_data_new_subset, matched_set)```
