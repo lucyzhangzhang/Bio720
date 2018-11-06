@@ -16,14 +16,14 @@ rna_counts <- as.data.frame(read.csv("~/Documents/R/Bio720/eXpress_dm_counts.csv
 mean_exp <- function(dat, col, log = F) {
   if (log) {
     dat[dat == 0 ] <- NA
-    my_mean <- mean(log2(dat[[col]]), na.rm = T)
+    my_mean <- mean(log2(dat[,col]), na.rm = T)
   } else {
-    my_mean <- mean(dat[[col]])
+    my_mean <- mean(dat[,col])
   }
   return(my_mean)
 }
-mean_exp(rna_counts, "F105_lg_female_wings", log = T)
-mean_exp(rna_counts, "F105_lg_female_thxhorn", log = F)
+mean_exp(rna_counts, 3, log = T)
+mean_exp(rna_counts, 23, log = F)
 ```
 3. Iterative application of `mean_exp` over all columns.
 ```{r}
@@ -67,15 +67,22 @@ system.time({colMeans(rna_counts)})
 ```
 6. Calculating the means of the rows
 ```{r}
-my_row_means <- function(x) {
-  my_row_mean <- rowMeans(x)
+my_row_means <- function(dat, row, log = F) {
+  if (log) {
+    dat[dat == 0 ] <- NA
+    my_row_mean <- rowMeans(log2(dat[row,]), na.rm = T)
+  } else {
+    my_row_mean <- rowMeans(dat)
+  }
   return(my_row_mean)
 }
-head(my_row_means(rna_counts))
+head(my_row_means(rna_counts, 4, log = T))
 ```
 7. Calculating the means of small and large male headhorns
 ```{r message=FALSE}
 library(dplyr)
+rna_counts[rna_counts == 0 ] <- NA
+rna_counts <- na.omit(rna_counts)
 my_sm <- rna_counts %>% select(contains("sm_male_hdhorn"))
 my_sm_mean <- rowMeans(my_sm, na.rm=T)
 my_lg <- rna_counts %>% select(contains("lg_male_hdhorn"))
@@ -101,6 +108,7 @@ my_plot <- ggplot(data=my_dat_melt, aes(x = value, y = my_diff)) +
         plot.title = element_text(hjust = 0.5))
 print(my_plot)
 ```
+
 Plot log(2) transformed data
 ```{r}
 my_sm_mean2 <- rowMeans(log2(my_sm))

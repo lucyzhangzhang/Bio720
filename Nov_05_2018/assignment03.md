@@ -15,25 +15,25 @@ rna_counts <- as.data.frame(read.csv("~/Documents/R/Bio720/eXpress_dm_counts.csv
 mean_exp <- function(dat, col, log = F) {
   if (log) {
     dat[dat == 0 ] <- NA
-    my_mean <- mean(log2(dat[[col]]), na.rm = T)
+    my_mean <- mean(log2(dat[,col]), na.rm = T)
   } else {
-    my_mean <- mean(dat[[col]])
+    my_mean <- mean(dat[,col])
   }
   return(my_mean)
 }
-mean_exp(rna_counts, "F105_lg_female_wings", log = T)
+mean_exp(rna_counts, 3, log = T)
 ```
 
 ```
-## [1] 8.581792
+## [1] 8.314916
 ```
 
 ```r
-mean_exp(rna_counts, "F105_lg_female_thxhorn", log = F)
+mean_exp(rna_counts, 23, log = F)
 ```
 
 ```
-## [1] 1433.749
+## [1] 1950.561
 ```
 3. Iterative application of `mean_exp` over all columns.
 
@@ -79,7 +79,7 @@ system.time({apply(rna_counts, 2, mean)})
 
 ```
 ##    user  system elapsed 
-##   0.010   0.002   0.013
+##   0.010   0.000   0.009
 ```
 
 ```r
@@ -98,7 +98,7 @@ names(my_vec_val) <- my_vec_name
 
 ```
 ##    user  system elapsed 
-##   0.010   0.001   0.011
+##   0.011   0.000   0.011
 ```
 5. Doing it in a more R-ish way...
 
@@ -124,21 +124,28 @@ system.time({colMeans(rna_counts)})
 6. Calculating the means of the rows
 
 ```r
-my_row_means <- function(x) {
-  my_row_mean <- rowMeans(x)
+my_row_means <- function(dat, row, log = F) {
+  if (log) {
+    dat[dat == 0 ] <- NA
+    my_row_mean <- rowMeans(log2(dat[row,]), na.rm = T)
+  } else {
+    my_row_mean <- rowMeans(dat)
+  }
   return(my_row_mean)
 }
-head(my_row_means(rna_counts))
+head(my_row_means(rna_counts, 4, log = T))
 ```
 
 ```
-## FBpp0087248 FBpp0293785 FBpp0080383 FBpp0077879 FBpp0311746 FBpp0289081 
-##    23.45455  3446.90909    79.54545   139.21818   145.09091  1485.90909
+## FBpp0077879 
+##    5.399504
 ```
 7. Calculating the means of small and large male headhorns
 
 ```r
 library(dplyr)
+rna_counts[rna_counts == 0 ] <- NA
+rna_counts <- na.omit(rna_counts)
 my_sm <- rna_counts %>% select(contains("sm_male_hdhorn"))
 my_sm_mean <- rowMeans(my_sm, na.rm=T)
 my_lg <- rna_counts %>% select(contains("lg_male_hdhorn"))
@@ -168,6 +175,7 @@ print(my_plot)
 ```
 
 ![](assignment03_files/figure-html/unnamed-chunk-9-1.png)<!-- -->
+
 Plot log(2) transformed data
 
 ```r
