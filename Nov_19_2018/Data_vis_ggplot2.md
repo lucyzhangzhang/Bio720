@@ -236,6 +236,7 @@ ggplot(mtcars, aes(mpg, fill =cyl)) +
 
 ![](Data_vis_ggplot2_files/figure-html/unnamed-chunk-18-1.png)<!-- -->
 
+
 ##`geom_line()`
 `geom_rect()` can draw highlights to your data (usually specify `ymax` and `ymin` to `Inf` and `-Inf`, respectively)
 
