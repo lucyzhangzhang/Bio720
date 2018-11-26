@@ -8,7 +8,8 @@ output:
 ---
 
 
-A basic scatter plot
+
+##Scatterplot
 
 ```r
 dll_data = read.csv("http://datadryad.org/bitstream/handle/10255/dryad.8377/dll.csv", header=TRUE)
@@ -44,3 +45,413 @@ plot(femur ~ tibia,
 
 * `.jpg` are lossy image formats
 
+Small exercise: Q1-Q3
+
+It's hard to see with all the data plotted...change the opacity of the points
+
+```r
+plot(femur ~ tibia,
+     pch = 2, # symbol, plot character
+     cex = 1.2, # size of symbol, character expand
+     col = "red", # symbol colour
+     xlim = c(0.40, 0.57),
+     ylim = c(0.42, 0.62),
+     xlab = " tibia length",
+     ylab = "femur length",
+     main = "leg lengths measures",
+     data = dll_data_subset)
+```
+
+![](Nov_19_class_files/figure-html/unnamed-chunk-3-1.png)<!-- -->
+
+Small exercises: Q4 - The SCT data is discrete
+
+```r
+plot(SCT ~ tibia,
+     pch = 2, # symbol, plot character
+     cex = 1.2, # size of symbol, character expand
+     col = "red", # symbol colour
+     xlim = c(0.40, 0.57),
+     ylim = c((min(SCT)-(0.1*min(SCT))), (max(SCT)+(0.1*max(SCT)))),
+     xlab = " tibia length",
+     ylab = "SCT",
+     main = "leg lengths measures",
+     data = dll_data_subset)
+```
+
+![](Nov_19_class_files/figure-html/unnamed-chunk-4-1.png)<!-- -->
+
+Separate the data based on shapes, call `temp` as a factor
+
+```r
+dll_data_subset$temp <- factor(dll_data_subset$temp)
+plot(femur ~ tibia,
+     pch = c(16,17)[dll_data_subset$temp], # symbol
+     cex = 0.5, # size of symbol
+     col = c("blue", "red")[dll_data_subset$genotype], # symbol colour
+     xlim = c(0.4, 0.57),
+     ylim = c(0.4, 0.62),
+     xlab = " tibia length",
+     ylab = "femur length",
+     main = "leg lengths measures",
+     data = dll_data_subset)
+```
+
+![](Nov_19_class_files/figure-html/unnamed-chunk-5-1.png)<!-- -->
+
+Adding a Legend to your data...
+
+```r
+plot(femur ~ tibia,
+     pch = c(16,17)[dll_data_subset$temp], # symbol
+     cex = 0.5, # size of symbol
+     col = c("blue", "red")[dll_data_subset$genotype], # symbol colour
+     xlim = c(0.4, 0.57),
+     ylim = c(0.4, 0.62),
+     xlab = " tibia length",
+     ylab = "femur length",
+     main = "leg lengths measures",
+     data = dll_data_subset)
+
+legend(x = "bottomright", 
+       legend  = c("wt 25C", "wt 30C", "Dll 25C", "Dll 30C"),
+       pch = c(16, 17, 16, 17),
+       col = c(rep("red", 2), rep("blue", 2)))
+```
+
+![](Nov_19_class_files/figure-html/unnamed-chunk-6-1.png)<!-- -->
+
+This data is overplotted!
+
+```r
+plot(SCT ~ tibia,
+     pch = c(16,17)[dll_data_subset$temp], # symbol
+     cex = 0.75, # size of symbol
+     col = c("blue", "red")[dll_data_subset$genotype], # symbol colour
+     xlim = c(0.4, 0.57),
+     ylim = c(8, 18),
+     xlab = " tibia length",
+     ylab = "Number of Sex Comb Teeth",
+     main = "leg lengths measures",
+     data = dll_data_subset)
+```
+
+![](Nov_19_class_files/figure-html/unnamed-chunk-7-1.png)<!-- -->
+
+Adding jitter so your data is easier to see...Change the amount of jitter by adjusting the `factor` parameter insider the `jitter()` function
+
+```r
+plot(jitter(SCT) ~ tibia,
+     pch = c(16,17)[dll_data_subset$temp], # symbol
+     cex = 0.75, # size of symbol
+     col = c("blue", "red")[dll_data_subset$genotype], # symbol colour
+     xlim = c(0.4, 0.57),
+     ylim = c(8, 18),
+     xlab = " tibia length",
+     ylab = "Number of Sex Comb Teeth",
+     main = "leg lengths measures",
+     data = dll_data_subset)
+```
+
+![](Nov_19_class_files/figure-html/unnamed-chunk-8-1.png)<!-- -->
+
+Draw lines on your data
+
+```r
+plot(jitter(SCT) ~ tibia,
+     pch = c(16,17)[dll_data_subset$temp], # symbol
+     cex = 0.75, # size of symbol
+     col = c("blue", "red")[dll_data_subset$genotype], # symbol colour
+     xlim = c(0.4, 0.57),
+     ylim = c(8, 18),
+     xlab = " tibia length",
+     ylab = "Number of Sex Comb Teeth",
+     main = "leg lengths measures",
+     data = dll_data_subset)
+
+abline(v = mean(dll_data_subset$tibia))
+abline(h = mean(dll_data_subset$SCT))
+```
+
+![](Nov_19_class_files/figure-html/unnamed-chunk-9-1.png)<!-- -->
+
+Make fancy `abline()`
+
+```r
+plot(jitter(SCT) ~ tibia,
+     pch = c(16,17)[dll_data_subset$temp], # symbol
+     cex = 0.75, # size of symbol
+     col = c("blue", "red")[dll_data_subset$genotype], # symbol colour
+     xlim = c(0.4, 0.57),
+     ylim = c(8, 18),
+     xlab = " tibia length",
+     ylab = "Number of Sex Comb Teeth",
+     main = "leg lengths measures",
+     data = dll_data_subset)
+
+abline(v = mean(dll_data_subset$tibia),
+       lwd = 3, # line width,
+       lty = 2, # stippling of line
+       col = "grey")
+
+abline(h = mean(dll_data_subset$SCT),
+       lwd = 3, lty = 2, col = "grey" )
+```
+
+![](Nov_19_class_files/figure-html/unnamed-chunk-10-1.png)<!-- -->
+
+`abline()` is good for making lines or curves through the data: Make a linear regression of the data, then plot the best fit line onto the plot with `abline()`. You can also put many `abline()`s on the plot at once, regressing different parts of the data
+
+```r
+mod1 <- lm(SCT ~ tarsus, 
+           data = dll_data_subset)
+
+plot(SCT ~ tarsus,
+     pch = c(16,17)[dll_data_subset$temp], # symbol
+     cex = 0.75, # size of symbol
+     col = c("blue", "red")[dll_data_subset$genotype], # symbol colour
+     xlab = " tarsus length",
+     ylab = "Number of Sex Comb Teeth",
+     main = "SCT VS tarsus",
+     data = dll_data_subset)
+
+# and then plot based on the model fit.
+
+abline(mod1, lwd = 2, lty = 2)
+```
+
+![](Nov_19_class_files/figure-html/unnamed-chunk-11-1.png)<!-- -->
+
+##Boxplot
+`notch` parameter gives you approximate visualization of the standard errors
+
+```r
+boxplot(SCT ~ genotype, 
+        data  = dll_data,
+        ylab = " # SCT",
+        notch = TRUE)
+```
+
+![](Nov_19_class_files/figure-html/unnamed-chunk-12-1.png)<!-- -->
+
+`varwidth` parameter adjusts width of the boxes based on the sample sizes
+
+```r
+boxplot(SCT ~ genotype, 
+        data  = dll_data_subset,
+        ylab = " # SCT",
+        varwidth = TRUE)
+```
+
+![](Nov_19_class_files/figure-html/unnamed-chunk-13-1.png)<!-- -->
+
+Add raw points to the boxplot but overplotting the points onto the boxplot, it's hard to see because there's no jitter
+
+```r
+boxplot(SCT ~ genotype, 
+        data  = dll_data_subset,
+        ylab = " # SCT",
+        varwidth = TRUE,
+        col = "blue",
+        outline = FALSE,
+        # Suppress observations
+        ylim = c(8, 20))
+
+with(dll_data_subset,
+     points(y = SCT, 
+            x = genotype,
+            col = "red"))
+```
+
+![](Nov_19_class_files/figure-html/unnamed-chunk-14-1.png)<!-- -->
+
+
+```r
+boxplot(SCT ~ genotype, 
+        data  = dll_data_subset,
+        ylab = " # SCT",
+        varwidth = TRUE,
+        col = "blue",
+        outline = FALSE,
+        # Suppress observations
+        ylim = c(8, 20))
+
+with(dll_data_subset,
+     points(y = jitter(SCT, factor = 0.75), 
+            x = jitter(as.numeric(genotype), factor = 0.5),
+            col = "red", pch = 16, cex = 0.5))
+```
+
+![](Nov_19_class_files/figure-html/unnamed-chunk-15-1.png)<!-- -->
+
+##Histograms
+Make a histogram of the data 
+
+```r
+with(dll_data, 
+     hist(SCT))
+```
+
+![](Nov_19_class_files/figure-html/unnamed-chunk-16-1.png)<!-- -->
+
+
+Change plot to density
+
+```r
+with(dll_data, 
+     hist(SCT, 
+          breaks = 12,
+          freq = FALSE, # For prob. densities
+          density = 2, #lines through bars.
+          col = "blue"
+          ))
+```
+
+![](Nov_19_class_files/figure-html/unnamed-chunk-17-1.png)<!-- -->
+
+Break up the data to make two charts
+
+```r
+par(mfrow = c(2,1)) 
+# mfrow is setting up number of plots by row
+
+with(dll_data[dll_data$genotype == "Dll",], 
+     hist(SCT, 
+          breaks = 13,
+          freq = FALSE, # For prob. densities
+          col = "red",
+          xlim = c(7, 20)
+          ))
+
+with(dll_data[dll_data$genotype == "wt",], 
+     hist(SCT, 
+          breaks = 9,
+          freq = FALSE, # For prob. densities
+          col = "blue",
+          xlim = c(7, 20)
+          ))
+```
+
+![](Nov_19_class_files/figure-html/unnamed-chunk-18-1.png)<!-- -->
+
+Overplotting tech
+
+```r
+par(mfrow = c(1,1)) # one plotting window
+# Generate subsets by genotype
+SCT_Dll <- subset(dll_data, 
+                 subset = genotype =="Dll" )
+
+SCT_wt <- subset(dll_data, 
+                 subset = genotype =="wt" )
+
+SCT <- dll_data$SCT
+# First we will draw the histogram  
+
+hist(SCT_Dll$SCT, 
+     col= "grey",
+  # Sometimes the default breaks are not so good, so here we use a sequence from lowest observed SCT to highest
+     breaks = seq(min(SCT), max(SCT)), # sets up breaks for histograms
+  
+  # Since we are planning on displaying two data sets, we need to make sure our y axis goes high enough
+  # below we compute the tables for # of SCT for each subset
+      ylim = c(0, max( c(table(SCT), table(SCT)))),  # sets up the maximum
+  
+  # Ditto for  the x axis
+     xlim = c(5, max(SCT)),
+  
+     main = "Sex Comb Teeth in Drosophila",  
+  
+     xlab = " # Sex Comb Teeth ", 
+     border = "black") # this is where the call to hist ends!
+  
+# Now we add on a second histogram  
+hist(SCT_wt$SCT,
+     col= "red",
+     density = 4,  # number of "crossing" lines
+     border = "red",  # The border colour for the histogram
+     breaks=seq(min(SCT), max(SCT)), 
+     add = TRUE)
+
+#Perhaps a legend would also be useful here
+
+legend(x = 15, # The beginning x coordinate for the legend
+       y = 250,
+       
+       # Sometimes for our text we want to use italics or generate a mathematical expression. we use expression()
+       # for more details ?text or ?plotmath
+       legend = c( expression(italic("Distal-less/+")), 
+          expression(italic("wild-type"))),
+       
+       col = c("grey", "red"),  # Setting up the colours for the legend box
+       lwd=4)   # lwd sets the line width
+```
+
+![](Nov_19_class_files/figure-html/unnamed-chunk-19-1.png)<!-- -->
+
+##Advanced examples
+Make some random data, making a new data frame and predict new data using `predict()`, into a new data set
+
+```r
+x <- 1:50
+y <- rnorm(n = length(x), mean = (2 + (0.8*x)), sd= 4)
+
+model_1 <- lm(y ~ x)
+new <- data.frame(x = seq(min(x), max(x), 1))
+pred <- predict(model_1, newdata = new, interval = "confidence")
+```
+
+Plot the data
+
+```r
+plot(y ~ x, pch = 20, cex = 1.5)
+lines(x = new[,1], y = pred[,1], lwd = 3) # this would be the same as abline(model.1)
+lines(x = new[,1], y = pred[,3], lwd = 3, lty = 2)
+lines(x = new[,1], y = pred[,2], lwd = 3, lty = 2)
+```
+
+![](Nov_19_class_files/figure-html/unnamed-chunk-21-1.png)<!-- -->
+
+Way to put multiple lines, makes a matrix of lines (mathlines)
+
+```r
+plot(y ~ x, pch = 20, cex = 1.5)
+matlines(x = new[,1], y = pred[,1:3], lwd=c(3,3,3), lty=c(1,2,2), col = 1)
+```
+
+![](Nov_19_class_files/figure-html/unnamed-chunk-22-1.png)<!-- -->
+
+Plot confidence level as a shaded region
+
+```r
+plot(y ~ x, pch= 20, type = "n") 
+
+polygon(x = c(1:nrow(new), nrow(new):1), 
+    y = c(pred[,2], rev(pred[,3])), 
+    col="grey", border = "grey")
+
+lines(x = new[,1], y = pred[,1], lwd = 3)
+# And the data
+points(y ~ x, pch = 20, cex = 1.5)
+```
+
+![](Nov_19_class_files/figure-html/unnamed-chunk-23-1.png)<!-- -->
+
+Adding transparency to the data\
+
+find the hex codes of the color using `as.hexmode()`, and the two numbers after the hex color is the transparency (64 bit, which means 32 is alpha 50%)
+
+```r
+plot(y ~ x, type = "n",
+    xlab = "predictor", ylab = "response", main = "Nice looking plot", 
+    cex.lab = 1.7, cex.axis = 1.5, cex.main = 2.1, 
+    family = "serif", pch = 20)
+
+polygon(x = c(1:nrow(new), nrow(new):1), 
+    y = c(pred[,2], rev(pred[,3])), 
+    col= "#fe000032", border = "#fe000032")
+
+points(y ~ x, pch = 20, cex = 2)
+```
+
+![](Nov_19_class_files/figure-html/unnamed-chunk-24-1.png)<!-- -->
