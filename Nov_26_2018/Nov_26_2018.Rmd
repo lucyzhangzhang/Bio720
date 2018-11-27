@@ -1,0 +1,198 @@
+---
+title: "Nov 26  in class noes"
+author: "Lucy Zhang"
+date: "November 26, 2018"
+output: 
+  html_document:
+    keep_md: yes
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+##Stochastic simulations
+
+* The outcome is determined when the math is the same, the model is static, adding sources of variation at various places in model and allowing to \emph{propagate} and influence your models
+
+##Randomness
+
+* There is no true randomness, only \emph{pseudo-random} generation
+
+```{r}
+set.seed(720)
+x <- rnorm(1000, mean = 5, sd = 1)
+mean(x)
+set.seed(720)
+x <- rnorm(1000, mean = 5, sd = 1)
+mean(x)
+set.seed(720)
+x <- rnorm(1000, mean = 5, sd = 1)
+mean(x)
+```
+
+* It's the same number every time if you set the seed the first time, but if you don't it will continue getting random numbers
+
+* If you don't set the seed, the computer uses the clock on your computer
+
+* Setting the seed is important because you want to be able to make reproducible data for other people
+
+##Rolling the dice
+
+```{r}
+sample(1:6, size = 1 , replace = T , prob = NULL)
+```
+
+* `sample()` is a function that samples permutations
+  + `x` is the thing you want to sample
+  + `size` is the number of times you want to sample
+  + `replace` toggles sampling with replacement
+  + `prob` is the probably of each samples
+  
+* Usually we are interested in sampling with replacment
+
+```{r}
+replicate(100, sample(1:6, size = 1 , replace = T , prob = NULL))
+```
+
+```{r}
+more_rolls <- sample(1:6, size = 1000 , replace = T , prob = NULL)
+barplot(table(more_rolls))
+```
+
+* If replace = F, then you can't take a sample larger than the population (6)
+
+##How is sampling useful
+
+* empirical sampling methods
+
+* Randomzation/permutation tests, shuffling the order relative to a treatment variable
+
+* Non-parametric bootstrap -> sampling with replacement
+
+##Modelling genetic drift
+
+* A stochastic sampling of which alleles are transmitted from one generation to the next -> *by random chance*
+
+```{r}
+sampling <- sample(c("A", "a"), size = 40, rep = T, prob = c(0.5, 0.5))
+table(sampling)
+```
+
+* Allele frequencies
+
+```{r}
+freq1 <- table(sampling)/length(sampling)
+sampling <- sample(c("A", "a"), size = 40, rep = T, prob = freq1)
+table(sampling)
+```
+
+##Numerical stochastic simulations
+
+* Simulate numbers to form a probability distribution
+
+* `runif` R uniform, generates a random number between your set ranges 
+
+```{r}
+runif(n = 1, min = 0, max = 1)
+```
+
+```{r}
+ru <- runif(n = 10000, min = 0, max = 1)
+head(ru)
+tail(ru)
+hist(ru, freq = F)
+```
+
+```{r}
+random.normal.100 <- rnorm(n = 100, mean = 5, sd= 2)
+par(mfrow = c(2, 2))
+plot(random.normal.100)
+hist(random.normal.100)
+qqnorm(y = random.normal.100)
+```
+
+* `qqplot` comparing data to theoretical distribution
+
+```{r}
+random.normal.100 <- rnorm(n = 100, mean = 5, sd= 2)
+thing <- replicate(100, random.normal.100)
+hist(thing, freq = F)
+```
+
+##Monte Carlo simulation
+
+* Deterministic part
+```{r}
+par(mfrow=c(1,1))
+a = 5
+b = 0.7
+x <- seq(2, 20)
+yfix <- a + b*x
+plot(yfix ~ x, main = "Deterministic Component")
+abline(a = 5, b = 0.7)
+```
+* Adding stochastic and random compoenents to the data
+
+* Red = true fit 
+
+* Blue = regression based on simulation
+
+```{r}
+y.sim.1 <- rnorm(length(x), mean = yfix, sd = 2.5)
+plot(y.sim.1 ~ x, pch = 20)
+abline(a = 5, b = 0.7, col = "red")
+y.sim.1.lm <- lm(y.sim.1 ~ x)
+abline(reg = y.sim.1.lm, lty = 2, col = "blue")
+
+```
+
+* Repeat the simulation 25 times
+
+```{r}
+plot(yfix ~ x, main = "Deterministic Component")
+for (i in 1:25) {
+  x <- seq(2, 20)
+  y.sim <- rnorm(length(x), mean = yfix, sd = 2)
+  points(y.sim ~ jitter(x), pch = 20, col = rgb(0, 0, 0, alpha = 0.5))
+  y.sim.lm <- lm(y.sim ~ x)
+  abline(reg = y.sim.lm, lty = 2, col = rgb(0, 0, 1, alpha = 0.5))
+}
+abline(a = 5, b = 0.7, col = "red")
+```
+
+* Generate 100000 bp sequence
+
+```{r}
+seq1 <- sample(c("A", "T", "C", "G"), 100000, replace = T, prob = rep(0.25, 4))
+table(seq1)/length(seq1)
+```
+
+* Combine into a string vector
+
+```{r}
+seq1_col <- paste(seq1, collapse = "")
+```
+
+##Global regular expressions parser
+
+```{r}
+x <- gregexpr("AACTTTT", seq1_col, fixed = T, useBytes = T)
+length(unlist(x))
+```
+
+* Parameters to speed up search
+  + `useBytes` byte by byte comparison, works on any ASCII characters
+  + `fixed` look through not everything
+  
+* In *Drosophila*, the genes have GC bias
+
+* In `prob`, the smaller number is smaller probability obv!
+
+```{r}
+seq2 <- sample(c("A", "T", "C", "G"), 100000, replace = T, prob = c(0.3, 0.3, 0.2, 0.2))
+table(seq2)/length(seq2)
+seq2_col <- paste(seq2, collapse = "")
+y <- gregexpr("AACTTTT", seq2_col, fixed = T, useBytes = T)
+length(unlist(y))
+```
