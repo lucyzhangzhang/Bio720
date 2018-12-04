@@ -1,13 +1,15 @@
 ---
 title: "Simulation Assignment"
 author: "Lucy Zhang"
-date: "November 30, 2018"
+date: "December 01, 2018"
 output: 
   html_document:
     keep_md: yes
 ---
 
 
+1. Complete Datacamp: Introduction to Bioconductor
+![Completed course screenshot](./screen.png)
 
 2. Function for deterministic simulations
 
@@ -152,7 +154,6 @@ draw_sims()
 6. Analyse the statstical power of the simulation algorithms
 * Generating p-values
 
-
 ```r
 p_val <- function(int, slope, size, rse) {
   x <- seq(from = 1, to = 10, length.out = size)
@@ -179,7 +180,12 @@ for (i in 1:length(my_p_vals)) {
 }
 my_p_vals2 <- as.data.frame(unlist(my_p_vals))
 colnames(my_p_vals2) <- "pval"
+ggplot(my_p_vals2, aes(x=pval)) + 
+  geom_histogram(bins = 100) +
+  labs(x = "p-value") 
 ```
+
+![](Simulation_assignment_files/figure-html/unnamed-chunk-6-1.png)<!-- -->
 
 * Check what proportion of times that the p-values are less than 0.05
 
@@ -223,7 +229,7 @@ length(my_p_vals3[my_p_vals3<0.05])/length(my_p_vals3)
 
 ```r
 sizes <- seq(10,100, 5)
-sim_matrix <- NULL
+#sim_matrix <- NULL
 lessfreq <- rep(0, length(sizes))
 for (i in 1:length(sizes)) {
   p_vals_mat <- rep(0, 100)

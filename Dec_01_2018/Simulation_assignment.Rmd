@@ -1,7 +1,7 @@
 ---
 title: "Simulation Assignment"
 author: "Lucy Zhang"
-date: "November 30, 2018"
+date: "December 01, 2018"
 output: 
   html_document:
     keep_md: yes
@@ -10,6 +10,8 @@ output:
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```
+1. Complete Datacamp: Introduction to Bioconductor
+![Completed course screenshot](./screen.png)
 
 2. Function for deterministic simulations
 
@@ -175,7 +177,7 @@ length(my_p_vals3[my_p_vals3<0.05])/length(my_p_vals3)
 
 ```{r}
 sizes <- seq(10,100, 5)
-sim_matrix <- NULL
+#sim_matrix <- NULL
 lessfreq <- rep(0, length(sizes))
 for (i in 1:length(sizes)) {
   p_vals_mat <- rep(0, 100)
