@@ -1,0 +1,155 @@
+---
+title: "String Manipulation"
+author: "Lucy Zhang"
+date: "December 3, 2018"
+output: 
+  html_document:
+    keep_md: yes
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+library(stringr)
+library(stringi)
+library(tidytext)
+```
+
+**How might you get `writeLines` to print each string on a newline?**
+
+```{r}
+fly_seq <- c(A = "ACTGGCCA", B = "ACTGGCCT", C = "ACTGTCCA" )
+cat(fly_seq, sep ="\n")
+```
+
+**Make a single string that looks like "x1 + x2 + x3 + x4 + x5" using `paste` or for stringi it is `stri_join()` and `str_c` in `stringr` **
+
+```{r}
+paste("x", 1:5, sep = "", collapse = " + ")
+```
+
+
+**I have created an object of DNA sequences called "seqs" how long is each sequence? How many sequences are there? `nchar()` in base, and `str_length()`**
+
+```{r, echo = F}
+seq_gen <- function() {
+   x <- sample(c("A", "C", "T", "G"), 
+           size = rbinom(100, 100, 0.8),
+           replace =T)
+   paste0(x, collapse="")    
+}
+seqs <- replicate(20, seq_gen())
+```
+
+```{r}
+nchar(seqs)
+length(seqs)
+```
+
+**Words in the origin of species**
+
+```{r, message = F}
+library(gutenbergr)
+library(tidyverse)
+
+books <- gutenberg_works(grepl(title, 
+                               pattern = "On the origin of species",
+                         ignore.case = TRUE))
+
+species <- gutenberg_download(1228)
+str(species)
+head(species$text)
+species_text <- species$text
+```
+
+**How many lines are empty, check using the `stri_isempty`. What proportion of lines is this?**
+
+```{r}
+empty <- stri_isempty(species_text)
+mean(empty)
+```
+
+**How often does the word introduction appear? Use `grep` or `str_subset`**
+
+```{r}
+grep(species_text, pattern = "introduction", ignore.case= T)
+```
+
+**How would you check the lines?**
+
+```{r}
+for (x in grep(species_text, pattern = "introduction", ignore.case= T)) {
+  print(species_text[x])
+}
+```
+
+Let's use slice in dplyr to remove introduction and INDEX as follows (or really just keeping everything in between)
+
+
+```{r}
+species_slice <- species %>%
+  slice(grep("^INTRODUCTION\\.", text):(grep("^INDEX\\.", text))-1)
+```
+
+**Identifying chapters**
+
+Each chapter begins like this "1. VARIATION UNDER DOMESTICATION". Can you identify a regular expression that matches this?
+
+```{r}
+grep("^[0-9]+\\.", species_slice$text, value=TRUE)
+```
+
+
+**removing blank lines etc...**
+
+Use nzchar (which returns FALSE is the string is empty) to find empty lines
+
+```{r}
+length(species_slice$text)
+sum(nzchar(species_slice$text))
+```
+
+**We can filter on those lines. Fill in the missing parts.**
+
+```{r}
+species_filtered <- species %>%
+  slice(grep("^INTRODUCTION\\.", text):(grep("^INDEX\\.", text))-1) %>%
+  filter(nzchar(text)) %>%
+  mutate(linenumber = row_number(),
+         chapter = cumsum(grepl("^[0-9]+\\.", text)))
+```
+
+**`tidytext`**
+We could continue to make all of the changes by ourselves, but let's use tidytext to help us
+
+```{r}
+species_tidy <- species_filtered %>%
+    unnest_tokens(word, text)
+```
+
+Now we remove "stop words"
+
+```{r}
+species_tidy <- species_tidy %>%
+  anti_join(stop_words)
+```
+
+**Find the most common words in the book?**
+
+```{r}
+species_count <- species_tidy %>% count(word) %>% arrange(desc(n))
+species_count
+```
+
+**How about a word cloud of the top 50 words**
+
+```{r, message = F}
+library(wordcloud)
+set.seed(57)
+ran_col <- sample(colors(), size = 300)
+wordcloud(species_count$word, species_count$n, max.words=300, min.freq=30 ,random.color=T, colors = ran_col, scale=c(5,.3), random.order = F)
+```
+
+
