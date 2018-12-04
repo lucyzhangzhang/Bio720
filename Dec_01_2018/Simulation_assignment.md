@@ -152,6 +152,7 @@ draw_sims()
 6. Analyse the statstical power of the simulation algorithms
 * Generating p-values
 
+
 ```r
 p_val <- function(int, slope, size, rse) {
   x <- seq(from = 1, to = 10, length.out = size)
@@ -178,10 +179,8 @@ for (i in 1:length(my_p_vals)) {
 }
 my_p_vals2 <- as.data.frame(unlist(my_p_vals))
 colnames(my_p_vals2) <- "pval"
-#ggplot(my_p_vals2, aes(x=pval)) + 
-#  geom_histogram(bins = 100) +
-#  labs(x = "p-value") 
 ```
+
 * Check what proportion of times that the p-values are less than 0.05
 
 
@@ -236,6 +235,7 @@ for (i in 1:length(sizes)) {
 ```
 
 * Plotting the data
+
 
 ```r
 data_freq <- as.data.frame(lessfreq)
