@@ -198,7 +198,8 @@ length(my_p_vals[my_p_vals<0.05])/length(my_p_vals)
 ## [1] 0.065
 ```
 
-* Changing the slope to 0, and checking the proportion of p-values less than 0.5
+* Changing the slope to 0, and checking the proportion of p-values less than 0.05
+* A slope of 0 results in an evenly distributed set of values from 0 to 1 because there is no correlation in the linear model. If the slope is set to a value closet to 1, then more points will be in the > 0.05 bin
 
 
 ```r

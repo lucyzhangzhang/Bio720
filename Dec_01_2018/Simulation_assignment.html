@@ -272,7 +272,8 @@ ggplot(my_p_vals2, aes(x=pval)) +
 <pre class="r"><code>length(my_p_vals[my_p_vals&lt;0.05])/length(my_p_vals)</code></pre>
 <pre><code>## [1] 0.065</code></pre>
 <ul>
-<li>Changing the slope to 0, and checking the proportion of p-values less than 0.5</li>
+<li>Changing the slope to 0, and checking the proportion of p-values less than 0.05</li>
+<li>A slope of 0 results in an evenly distributed set of values from 0 to 1 because there is no correlation in the linear model. If the slope is set to a value closet to 1, then more points will be in the &gt; 0.05 bin</li>
 </ul>
 <pre class="r"><code>my_p_vals3 &lt;- rep(0, 1000)
 for (i in 1:length(my_p_vals3)) {
